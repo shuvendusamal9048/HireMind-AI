@@ -21,9 +21,15 @@ class Settings(BaseSettings):
     MINIO_ENDPOINT: str
     MINIO_ACCESS_KEY: str
     MINIO_SECRET_KEY: str
+    MINIO_BUCKET: str
 
     QDRANT_HOST: str
     QDRANT_PORT: int
+
+    GEMINI_API_KEY: str
+
+    MAIL_USERNAME: str
+    MAIL_PASSWORD: str
 
     class Config:
         env_file = str(ROOT_DIR / ".env")
