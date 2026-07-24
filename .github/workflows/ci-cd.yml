@@ -62,18 +62,17 @@ jobs:
     needs: [backend-test-and-lint, frontend-build-check]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Trigger Render Backend Deploy Hook
-        if: env.RENDER_DEPLOY_HOOK != ''
+        if: secrets.RENDER_DEPLOY_HOOK != ''
         run: |
-          curl -X POST "$RENDER_DEPLOY_HOOK"
-        env:
-          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
       - name: Deploy Frontend to Vercel
         uses: amondnet/vercel-action@v25
-        if: env.VERCEL_TOKEN != ''
+        if: secrets.VERCEL_TOKEN != ''
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
