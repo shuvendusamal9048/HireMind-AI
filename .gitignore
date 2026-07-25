@@ -25,7 +25,7 @@ build/
 uploads/
 backend/uploads/*
 !backend/uploads/.gitkeep
-storage/
+/storage/
 *.sqlite
 *.db
 
