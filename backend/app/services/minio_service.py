@@ -17,31 +17,47 @@ client = Minio(
 
 
 def upload_resume(file):
+    extension = os.path.splitext(file.filename)[1]
+    filename = f"{uuid.uuid4()}{extension}"
 
-    extension = os.path.splitext(
-        file.filename
-    )[1]
+    # Try uploading to MinIO
+    try:
+        if not client.bucket_exists(settings.MINIO_BUCKET):
+            client.make_bucket(settings.MINIO_BUCKET)
 
-    filename = (
-        f"{uuid.uuid4()}{extension}"
-    )
+        client.put_object(
+            bucket_name=settings.MINIO_BUCKET,
+            object_name=filename,
+            data=file.file,
+            length=-1,
+            part_size=10 * 1024 * 1024,
+            content_type=file.content_type
+        )
 
-    client.put_object(
-        bucket_name=settings.MINIO_BUCKET,
-        object_name=filename,
-        data=file.file,
-        length=-1,
-        part_size=10 * 1024 * 1024,
-        content_type=file.content_type
-    )
+        url = client.presigned_get_object(
+            settings.MINIO_BUCKET,
+            filename,
+            expires=timedelta(days=7)
+        )
 
-    url = client.presigned_get_object(
-        settings.MINIO_BUCKET,
-        filename,
-        expires=timedelta(days=7)
-    )
+        return {
+            "filename": filename,
+            "url": url
+        }
+    except Exception as e:
+        print(f"MinIO unavailable ({e}), using local file storage fallback.")
 
-    return {
-        "filename": filename,
-        "url": url
-    }
+        # Local storage fallback
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        upload_dir = os.path.join(base_dir, "uploads", "resumes")
+        os.makedirs(upload_dir, exist_ok=True)
+
+        file_path = os.path.join(upload_dir, filename)
+        file.file.seek(0)
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+
+        return {
+            "filename": filename,
+            "url": f"/uploads/resumes/{filename}"
+        }

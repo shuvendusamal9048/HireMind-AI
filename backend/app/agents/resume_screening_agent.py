@@ -26,13 +26,20 @@ class ResumeScreeningAgent:
                 application.resume_filename
             )
 
-            # Download PDF from MinIO
-            obj = client.get_object(
-                "resumes",
-                application.resume_filename
-            )
-
-            pdf_bytes = obj.read()
+            # Download PDF from MinIO with local disk fallback
+            try:
+                obj = client.get_object(
+                    "resumes",
+                    application.resume_filename
+                )
+                pdf_bytes = obj.read()
+            except Exception as minio_err:
+                print(f"MinIO get_object unavailable ({minio_err}), reading from local file storage fallback...")
+                import os
+                base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                local_file_path = os.path.join(base_dir, "uploads", "resumes", application.resume_filename)
+                with open(local_file_path, "rb") as f:
+                    pdf_bytes = f.read()
 
             # Save temporarily
             with tempfile.NamedTemporaryFile(
