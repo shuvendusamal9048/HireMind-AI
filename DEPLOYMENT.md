@@ -51,11 +51,12 @@ This guide details how to deploy **HireMind AI** online **100% FREE** with **ZER
 
 | Variable Name | Production Value |
 |---|---|
-| `POSTGRES_HOST` | *(From Neon.tech)* `ep-example-pooler.ap-southeast-1.aws.neon.tech` |
+| `PYTHONPATH` | `backend` |
+| `POSTGRES_HOST` | *(From Neon.tech)* `ep-soft-hall-aghtibpv.c-2.eu-central-1.aws.neon.tech` |
 | `POSTGRES_PORT` | `5432` |
 | `POSTGRES_DB` | `neondb` |
 | `POSTGRES_USER` | `neondb_owner` |
-| `POSTGRES_PASSWORD` | *(From Neon.tech)* `your_neon_password` |
+| `POSTGRES_PASSWORD` | *(From Neon.tech)* `npg_CcYl5Ux8ytdg` |
 | `JWT_SECRET_KEY` | `hiremind_production_jwt_secret_key_2026` |
 | `GEMINI_API_KEY` | `YOUR_GEMINI_API_KEY` |
 | `MAIL_USERNAME` | `shuvendusamal9048@gmail.com` |
