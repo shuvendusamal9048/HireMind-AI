@@ -12,6 +12,7 @@ import Card, { CardHeader } from '../components/Card';
 import { useJobQuery, useUpdateJobMutation, useDeleteJobMutation } from '../hooks/useJobQueries';
 import { useApplicationsQuery } from '../hooks/useApplicationQueries';
 import { ROUTES } from '../utils/constants';
+import { copyToClipboard } from '../utils/clipboard';
 
 export const JobDetails = () => {
   const { id } = useParams();
@@ -53,10 +54,10 @@ export const JobDetails = () => {
     setSkills((prev) => prev.filter((s) => s !== skillToRemove));
   };
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     if (!job) return;
     const applyUrl = `${window.location.origin}/jobs/${job.application_code || job.id}`;
-    navigator.clipboard.writeText(applyUrl);
+    await copyToClipboard(applyUrl);
     setCopiedLink(true);
     toast.success('Public job application link copied to clipboard!');
     setTimeout(() => setCopiedLink(false), 2000);

@@ -32,6 +32,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=12345
       - JWT_SECRET_KEY=supersecret
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}

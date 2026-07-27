@@ -18,6 +18,7 @@ export const publicJobService = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 120000,
     });
     return response.data;
   },

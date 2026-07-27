@@ -8,6 +8,7 @@ ROOT_DIR = Path(__file__).resolve().parents[3]
 class Settings(BaseSettings):
     APP_NAME: str = "HireMind AI"
     APP_ENV: str = "development"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     POSTGRES_HOST: str = "localhost"
     POSTGRES_PORT: int = 5432

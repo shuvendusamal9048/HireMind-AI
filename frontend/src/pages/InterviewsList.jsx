@@ -7,6 +7,7 @@ import Card from '../components/Card';
 import Button from '../components/Button';
 import { candidateInterviewService } from '../services/candidateInterviewService';
 import { applicationService } from '../services/applicationService';
+import { copyToClipboard } from '../utils/clipboard';
 
 export const InterviewsList = () => {
   const [copiedId, setCopiedId] = useState(null);
@@ -48,9 +49,9 @@ export const InterviewsList = () => {
 
   const interviews = rawInterviews || [];
 
-  const handleCopyLink = (code, password) => {
+  const handleCopyLink = async (code, password) => {
     const link = `${window.location.origin}/interview/login`;
-    navigator.clipboard.writeText(`Interview Login URL: ${link}\nCode: ${code}\nPassword: ${password}`);
+    await copyToClipboard(`Interview Login URL: ${link}\nCode: ${code}\nPassword: ${password}`);
     setCopiedId(code);
     toast.success('Interview credentials copied to clipboard!');
     setTimeout(() => setCopiedId(null), 2000);

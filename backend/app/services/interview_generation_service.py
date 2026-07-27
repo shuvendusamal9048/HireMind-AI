@@ -1,4 +1,5 @@
 import json
+from app.core.config import settings
 
 from app.models.interview import Interview
 from app.models.interview_question import InterviewQuestion
@@ -122,7 +123,7 @@ class InterviewGenerationService:
         interview.candidate_password,
 
     "login_url":
-        "http://localhost:5173/interview/login",
+        f"{settings.FRONTEND_URL}/interview/login",
 
     "questions":
     [
