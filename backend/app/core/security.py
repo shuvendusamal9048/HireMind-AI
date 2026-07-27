@@ -9,40 +9,26 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
 import bcrypt
 
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
-
 
 def hash_password(password: str) -> str:
-    try:
-        return pwd_context.hash(password)
-    except Exception:
-        # Native bcrypt fallback if passlib encounters version check issues
-        pwd_bytes = password.encode('utf-8')
-        salt = bcrypt.gensalt()
-        return bcrypt.hashpw(pwd_bytes, salt).decode('utf-8')
+    """Hash password using native bcrypt library."""
+    pwd_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pwd_bytes, salt).decode('utf-8')
 
 
 def verify_password(
     plain_password: str,
     hashed_password: str
 ) -> bool:
+    """Verify password using native bcrypt library."""
     try:
-        return pwd_context.verify(
-            plain_password,
-            hashed_password
+        return bcrypt.checkpw(
+            plain_password.encode('utf-8'),
+            hashed_password.encode('utf-8')
         )
     except Exception:
-        # Native bcrypt fallback
-        try:
-            return bcrypt.checkpw(
-                plain_password.encode('utf-8'),
-                hashed_password.encode('utf-8')
-            )
-        except Exception:
-            return False
+        return False
 
 
 def create_access_token(data: dict):
