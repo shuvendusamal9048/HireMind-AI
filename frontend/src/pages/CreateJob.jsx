@@ -8,6 +8,7 @@ import Input from '../components/Input';
 import Card from '../components/Card';
 import { useCreateJobMutation } from '../hooks/useJobQueries';
 import { ROUTES } from '../utils/constants';
+import { copyToClipboard } from '../utils/clipboard';
 
 export const CreateJob = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export const CreateJob = () => {
     }
 
     try {
-      await createMutation.mutateAsync({
+      const newJob = await createMutation.mutateAsync({
         title: data.title,
         description: data.description,
         experience: Number(data.experience),
@@ -49,9 +50,19 @@ export const CreateJob = () => {
         salary_max: data.salary_max ? Number(data.salary_max) : null,
         skills: skills,
       });
+
+      const code = newJob?.application_code || newJob?.id;
+      if (code) {
+        const applyUrl = `${window.location.origin}/jobs/${code}`;
+        await copyToClipboard(applyUrl);
+        toast.success('Job position created & public apply link copied!');
+      } else {
+        toast.success('Job position created successfully!');
+      }
       navigate(ROUTES.JOBS);
     } catch (err) {
       console.error(err);
+      toast.error('Failed to create job position. Check details.');
     }
   };
 

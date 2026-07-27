@@ -161,7 +161,7 @@ class EmailService:
             <p style="font-size: 14px;">We are pleased to inform you that your company registration and GST number have been verified and <strong>APPROVED</strong> by the HireMind Super Admin.</p>
             <p style="font-size: 14px;">Your account is now fully active. You can log in to your employer portal to start creating job postings and evaluating candidates with AI.</p>
             <div style="text-align: center; margin: 25px 0;">
-                <a href="{settings.FRONTEND_URL}/login" class="btn">Log In to Employer Dashboard</a>
+                <a href="http://localhost:5173/login" class="btn">Log In to Employer Dashboard</a>
             </div>
             <p style="font-size: 13px; color: #64748b;">Best regards,<br><strong>HireMind Admin Verification Team</strong></p>
         </div>

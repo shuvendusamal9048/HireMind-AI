@@ -1,4 +1,3 @@
-from app.core.config import settings
 from app.repositories.application_repository import ApplicationRepository
 from app.constants.application_constants import ApplicationStatus
 from app.services.email_service import EmailService
@@ -109,7 +108,7 @@ class ApplicationManagementService:
                 </div>
             </div>
 
-            <a href="{settings.FRONTEND_URL}/interview/login" class="btn">Launch Candidate Interview Portal →</a>
+            <a href="http://localhost:5173/interview/login" class="btn">Launch Candidate Interview Portal →</a>
 
             <p style="font-size: 12px; color: #64748b; text-align: center; margin-top: 20px;">
                 💡 <strong>Flexible Assessment Deadline:</strong> You may complete your online AI technical interview at any time convenient to you before <strong>{deadline_date}</strong>. Please ensure your webcam and proctoring permissions are enabled before starting.
