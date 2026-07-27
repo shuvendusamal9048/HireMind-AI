@@ -1,3 +1,4 @@
+from app.core.config import settings
 from app.constants.application_constants import (
     ApplicationStatus
 )
@@ -31,7 +32,7 @@ class InterviewService:
         )
 
         application.interview_link = (
-        "http://localhost:5173/interview/login"
+            f"{settings.FRONTEND_URL}/interview/login"
         )
 
         application.interviewer_name = (
@@ -57,7 +58,7 @@ class InterviewService:
                 "interview_id": existing_interview.id,
                 "interview_code": existing_interview.interview_code,
                 "password": existing_interview.candidate_password,
-                "login_url": "http://localhost:5173/interview/login"
+                "login_url": f"{settings.FRONTEND_URL}/interview/login"
             }
         else:
             interview_data = await (
@@ -121,7 +122,7 @@ class InterviewService:
                 </div>
             </div>
 
-            <a href="http://localhost:5173/interview/login" class="btn">Launch Candidate Interview Portal →</a>
+            <a href="{settings.FRONTEND_URL}/interview/login" class="btn">Launch Candidate Interview Portal →</a>
 
             <p style="font-size: 12px; color: #64748b; text-align: center; margin-top: 20px;">
                 💡 <strong>Flexible Assessment Deadline:</strong> You may complete your online AI technical interview at any time convenient to you before <strong>{deadline_date}</strong>. Please ensure your webcam and proctoring permissions are enabled before starting.
@@ -150,5 +151,5 @@ class InterviewService:
         interview_data["password"],
 
     "login_url":
-        "http://localhost:5173/interview/login"
+        f"{settings.FRONTEND_URL}/interview/login"
 }
