@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
 from app.core.config import settings
+from app.db.base import Base
+from app.db.session import engine
 from app.api.v1.router import api_router
 from app.api.v1.auth import router as auth_router
 from app.api.v1.jobs import router as jobs_router
@@ -15,6 +18,23 @@ app = FastAPI(
     title=settings.APP_NAME,
     version="1.0.0"
 )
+
+
+@app.on_event("startup")
+async def startup_db_migration():
+    """Ensure database schema and all table columns exist on startup."""
+    try:
+        async with engine.begin() as conn:
+            # 1. Create missing tables
+            await conn.run_sync(Base.metadata.create_all)
+
+            # 2. Automatically add missing columns to existing tables if needed (AWS / Neon migration)
+            await conn.execute(text("ALTER TABLE companies ADD COLUMN IF NOT EXISTS gst_number VARCHAR;"))
+            await conn.execute(text("ALTER TABLE companies ADD COLUMN IF NOT EXISTS approval_status VARCHAR DEFAULT 'APPROVED';"))
+            print("Database startup migration executed successfully.")
+    except Exception as e:
+        print(f"Startup DB migration notice: {e}")
+
 
 # Configure CORS for frontend access
 app.add_middleware(

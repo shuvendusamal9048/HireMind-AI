@@ -51,6 +51,7 @@ This guide details how to deploy **HireMind AI** online **100% FREE** with **ZER
 
 | Variable Name | Production Value |
 |---|---|
+| `PYTHON_VERSION` | `3.11.9` |
 | `PYTHONPATH` | `backend` |
 | `POSTGRES_HOST` | *(From Neon.tech)* `ep-soft-hall-aghtibpv.c-2.eu-central-1.aws.neon.tech` |
 | `POSTGRES_PORT` | `5432` |
