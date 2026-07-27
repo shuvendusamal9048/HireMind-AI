@@ -112,7 +112,7 @@ class AuthService:
         user = await (
             UserRepository.get_user_by_email(
                 db,
-                email
+                email.strip().lower()
             )
         )
 
