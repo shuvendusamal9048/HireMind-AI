@@ -11,12 +11,13 @@ export const authService = {
   },
 
   register: async (companyData) => {
-    // companyData: { companyName, adminName, email, password, website, industry, companySize }
+    // companyData: { companyName, adminName, email, password, gstNumber, website, industry, companySize }
     const response = await api.post('/auth/register', {
       company_name: companyData.companyName || companyData.company_name,
       admin_name: companyData.adminName || companyData.admin_name,
       email: companyData.email,
       password: companyData.password,
+      gst_number: companyData.gst_number || companyData.gstNumber || '',
       website: companyData.website || '',
       industry: companyData.industry || '',
       company_size: companyData.companySize || companyData.company_size || '',

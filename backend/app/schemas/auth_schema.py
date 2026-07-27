@@ -1,15 +1,15 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field, AliasChoices
 
 
 class RegisterRequest(BaseModel):
-    company_name: str
-    admin_name: str
+    company_name: str = Field(..., validation_alias=AliasChoices('company_name', 'companyName'))
+    admin_name: str = Field(..., validation_alias=AliasChoices('admin_name', 'adminName'))
     email: EmailStr
     password: str
-    gst_number: str = ""
+    gst_number: str = Field("", validation_alias=AliasChoices('gst_number', 'gstNumber'))
     website: str = ""
     industry: str = ""
-    company_size: str = ""
+    company_size: str = Field("", validation_alias=AliasChoices('company_size', 'companySize'))
 
 
 

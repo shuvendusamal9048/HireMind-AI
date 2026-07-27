@@ -1,11 +1,10 @@
 from datetime import datetime, timedelta
+import bcrypt
 from jose import jwt, JWTError
 
 SECRET_KEY = "super-secret-key-change-later"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
-
-import bcrypt
 
 
 def hash_password(password: str) -> str:
@@ -43,16 +42,15 @@ def create_access_token(data: dict):
         SECRET_KEY,
         algorithm=ALGORITHM
     )
-def decode_access_token(token: str):
 
+
+def decode_access_token(token: str):
     try:
         payload = jwt.decode(
             token,
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
-
         return payload
-
     except JWTError:
         return None
