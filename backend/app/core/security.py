@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-from jose import jwt
-from passlib.context import CryptContext
 from jose import jwt, JWTError
 
 SECRET_KEY = "super-secret-key-change-later"
