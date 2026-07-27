@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy requirements and install
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt && pip uninstall -y passlib || true
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend source code and set up upload directories
 COPY backend /app/backend
@@ -23,5 +23,5 @@ ENV PYTHONPATH=/app/backend
 # Expose port
 EXPOSE 8000
 
-# Run uvicorn server
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run uvicorn server via python module
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
