@@ -151,8 +151,8 @@ export const PublicJobPage = () => {
               <span className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
                 {job.company_name || 'HireMind Enterprise Partner'}
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                Official Career Portal & Application Gateway
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold tracking-wide">
+                {job.company_name ? `${job.company_name} Career Portal & Application Gateway` : 'Official Career Portal & Application Gateway'}
               </span>
             </div>
           </div>
@@ -270,7 +270,7 @@ export const PublicJobPage = () => {
               <Input
                 label="Full Name (Legal Name)"
                 name="candidate_name"
-                placeholder="e.g. Shuvendu Samal"
+                placeholder="e.g. Alex Rivera"
                 icon={User}
                 error={errors.candidate_name?.message}
                 {...register('candidate_name', { required: 'Please enter your legal full name' })}

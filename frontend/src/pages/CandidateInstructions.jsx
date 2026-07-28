@@ -83,67 +83,67 @@ export const CandidateInstructions = () => {
 
           {/* Grid of Key Features */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-extrabold text-xs">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
+              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-black text-xs">
                 <FileText className="w-4 h-4" />
                 <span>Section A — 10 Technical MCQs</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Complete <strong>10 Multiple-Choice Questions</strong>. Select choice A, B, C, or D for each question and navigate smoothly.
+              <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                Complete <strong className="text-slate-900 dark:text-white font-black">10 Multiple-Choice Questions</strong>. Select choice A, B, C, or D for each question and navigate smoothly.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
+              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-xs">
                 <Sparkles className="w-4 h-4" />
                 <span>Section B — Python Coding (3 Test Cases)</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Write your Python solution inside <code className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">def two_sum(nums, target):</code> and test live.
+              <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                Write your Python solution inside <code className="bg-slate-200/70 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded font-mono font-bold">def two_sum(nums, target):</code> and test live.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 space-y-2">
-              <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-extrabold text-xs">
+            <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/80 space-y-2 shadow-sm">
+              <div className="flex items-center gap-2 text-rose-700 dark:text-rose-300 font-black text-xs">
                 <MonitorX className="w-4 h-4" />
                 <span>Tab Switching Limit (Max 3 Warnings)</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Each tab switch triggers <strong>1 warning count</strong>. On the <strong>4th tab switch violation</strong>, your exam will be <strong>permanently locked</strong>.
+              <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                Each tab switch triggers <strong className="text-rose-700 dark:text-rose-300 font-extrabold">1 warning count</strong>. On the <strong className="text-rose-800 dark:text-rose-200 font-black">4th tab switch violation</strong>, your exam will be <strong className="text-rose-800 dark:text-rose-200">permanently locked</strong>.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-900/50 space-y-2">
-              <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-extrabold text-xs">
+            <div className="p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/80 space-y-2 shadow-sm">
+              <div className="flex items-center gap-2 text-purple-700 dark:text-purple-300 font-black text-xs">
                 <Users className="w-4 h-4" />
                 <span>Webcam & Multi-Person AI Proctoring</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                Your camera feed is monitored continuously. If <strong>multiple persons appear in frame</strong>, cheating warnings trigger immediately.
+              <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                Your camera feed is monitored continuously. If <strong className="text-purple-800 dark:text-purple-200 font-extrabold">multiple persons appear in frame</strong>, cheating warnings trigger immediately.
               </p>
             </div>
           </div>
 
           {/* Detailed Bullet Points */}
           <div className="space-y-3 pt-2">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <h3 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Candidate Anti-Cheating Checklist
             </h3>
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-3 text-xs text-slate-800 dark:text-slate-100 shadow-sm font-medium">
               <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span>Ensure your computer webcam and microphone permissions are granted.</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <span>Ensure your computer webcam and microphone permissions are granted before starting.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span>Sit in a well-lit room alone. Ensure no other persons are in camera range.</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <span>Sit in a well-lit room alone. Ensure no other persons are in camera range during the exam.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <span>Do NOT open additional tabs, browser windows, developer tools, or secondary applications.</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                 <span>If you switch tabs 4 times, the system will automatically terminate your session and notify HR.</span>
               </div>
             </div>
