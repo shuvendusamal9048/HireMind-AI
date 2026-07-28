@@ -89,6 +89,13 @@ export const CandidateInterview = () => {
 
     // Initialize Webcam & 1-Minute Proctoring Video Recorder
     const initWebcam = async () => {
+      // Check if browser mediaDevices API is available (restricted on HTTP non-secure contexts)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.warn('HTTP Non-Secure Context: Camera access restricted by browser policy. Session proceeding in HTTP proctoring mode.');
+        toast('HTTP Mode: Exam proctoring active (Tab switch & timer enabled).', { icon: 'ℹ️' });
+        return;
+      }
+
       try {
         const constraints = { video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false };
         const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -139,11 +146,16 @@ export const CandidateInterview = () => {
           console.warn('MediaRecorder error:', recErr);
         }
       } catch (err) {
-        console.warn('Webcam permission denied or camera missing:', err);
-        setIsCameraDenied(true);
-        setIsTerminated(true);
-        toast.error('CAMERA PERMISSION DENIED: Examination terminated immediately!');
-        candidateInterviewService.finishInterview(id);
+        console.warn('Webcam permission check:', err);
+        // Only lock exam if user explicitly clicked "Block / Deny" on HTTPS context
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          setIsCameraDenied(true);
+          setIsTerminated(true);
+          toast.error('CAMERA PERMISSION DENIED: Examination terminated immediately!');
+          candidateInterviewService.finishInterview(id);
+        } else {
+          console.warn('Camera missing or HTTP context. Session proceeding in standard proctoring mode.');
+        }
       }
     };
     initWebcam();
@@ -814,14 +826,21 @@ export const CandidateInterview = () => {
                 </span>
               </div>
 
-              <div className="relative aspect-video rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden shadow-inner">
+              <div className="relative aspect-video rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden shadow-inner flex items-center justify-center">
                 <video
                   ref={videoRef}
                   autoPlay
                   playsInline
                   muted
-                  className="w-full h-full object-cover scale-x-[-1]"
+                  className={`w-full h-full object-cover scale-x-[-1] ${cameraActive ? 'block' : 'hidden'}`}
                 />
+                {!cameraActive && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-xs text-slate-400 space-y-1.5 bg-slate-900/90">
+                    <Video className="w-8 h-8 text-indigo-400 opacity-60" />
+                    <span className="font-extrabold text-slate-200 text-[11px]">Proctoring Active (HTTP Mode)</span>
+                    <span className="text-[10px] text-slate-500 font-mono">Tab switching & timer active</span>
+                  </div>
+                )}
                 {multiPersonAlert && (
                   <div className="absolute inset-0 bg-rose-950/80 flex items-center justify-center p-2 text-center text-white text-xs font-bold gap-1 animate-pulse">
                     <AlertTriangle className="w-4 h-4 text-amber-300" />
