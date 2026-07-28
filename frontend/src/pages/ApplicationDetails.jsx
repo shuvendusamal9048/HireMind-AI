@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   User, Mail, Phone, Clock, FileText, Sparkles, Award,
-  CheckCircle2, XCircle, Calendar, ArrowLeft, Download, Eye, ExternalLink, ShieldCheck
+  CheckCircle2, XCircle, Calendar, ArrowLeft, Download, Eye, ExternalLink, ShieldCheck, Video
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../components/Button';
@@ -272,11 +272,35 @@ export const ApplicationDetails = () => {
               )}
 
               {candidate.proctoring_video_url && (
-                <a href={candidate.proctoring_video_url} download className="block">
-                  <Button variant="primary" className="w-full text-xs font-bold justify-center bg-indigo-600 hover:bg-indigo-700 text-white border-0" icon={Video}>
-                    Download Proctoring Video (1 min WebM)
-                  </Button>
-                </a>
+                <div className="space-y-2 pt-2">
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Candidate Exam Photos:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {candidate.proctoring_video_url.split(',').map((url, idx) => {
+                      const isImage = url.endsWith('.jpg') || url.endsWith('.png') || url.endsWith('.jpeg');
+                      if (isImage) {
+                        return (
+                          <div key={idx} className="relative aspect-video rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-900 group">
+                            <img src={url} alt={`Screenshot ${idx + 1}`} className="w-full h-full object-cover" />
+                            <a 
+                              href={url} 
+                              download={`screenshot_${idx + 1}.jpg`} 
+                              className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-[10px] font-bold gap-1"
+                            >
+                              <Download className="w-3.5 h-3.5" /> Download
+                            </a>
+                          </div>
+                        );
+                      }
+                      return (
+                        <a key={idx} href={url} download className="col-span-2 block">
+                          <Button variant="primary" className="w-full text-xs font-bold justify-center bg-indigo-600 hover:bg-indigo-700 text-white border-0" icon={Video}>
+                            Download Proctoring Video
+                          </Button>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
           </Card>

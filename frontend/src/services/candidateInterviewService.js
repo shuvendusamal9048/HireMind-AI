@@ -212,6 +212,18 @@ export const candidateInterviewService = {
       return { message: 'Video upload completed' };
     }
   },
+
+  uploadScreenshot: async (interview_id, formData) => {
+    try {
+      const response = await api.post(`/interviews/${interview_id}/screenshot`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return response.data;
+    } catch (err) {
+      console.warn('Screenshot upload error:', err);
+      return { message: 'Screenshot upload completed' };
+    }
+  },
 };
 
 export default candidateInterviewService;

@@ -170,6 +170,53 @@ export const CandidateInterview = () => {
     };
   }, [id]);
 
+  const captureAndUploadScreenshot = async () => {
+    if (!videoRef.current || !cameraActive) return;
+
+    try {
+      const video = videoRef.current;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(async (blob) => {
+        if (!blob) return;
+
+        const formData = new FormData();
+        formData.append('file', blob, `screenshot_${id}.jpg`);
+
+        try {
+          await candidateInterviewService.uploadScreenshot(id, formData);
+        } catch (e) {
+          console.warn('Screenshot upload error:', e);
+        }
+      }, 'image/jpeg', 0.85);
+    } catch (err) {
+      console.warn('Capture screenshot error:', err);
+    }
+  };
+
+  // Automatically take two proctoring screenshots when camera becomes active
+  useEffect(() => {
+    if (!cameraActive) return;
+
+    const timer1 = setTimeout(() => {
+      captureAndUploadScreenshot();
+    }, 5000);
+
+    const timer2 = setTimeout(() => {
+      captureAndUploadScreenshot();
+    }, 30000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [cameraActive]);
+
   // Track Visited Questions in Section A
   useEffect(() => {
     setVisitedA((prev) => new Set(prev).add(currentIdx));

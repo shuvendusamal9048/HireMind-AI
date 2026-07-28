@@ -606,3 +606,45 @@ async def upload_proctoring_video(
         "message": "Proctoring video uploaded successfully",
         "video_url": video_url
     }
+
+@router.post("/{interview_id}/screenshot")
+async def upload_screenshot(
+    interview_id: str,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db)
+):
+    interview = await InterviewRepository.get_by_id(db, interview_id)
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+
+    ext = os.path.splitext(file.filename)[1] or ".jpg"
+    filename = f"screenshot_{interview_id}_{uuid.uuid4().hex[:6]}{ext}"
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    upload_dir = os.path.join(base_dir, "uploads", "proctoring")
+    os.makedirs(upload_dir, exist_ok=True)
+    file_path = os.path.join(upload_dir, filename)
+
+    contents = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(contents)
+
+    screenshot_url = f"/uploads/proctoring/{filename}"
+
+    # Append to existing URL as a comma-separated list
+    current_urls = interview.proctoring_video_url or ""
+    if current_urls:
+        new_urls = f"{current_urls},{screenshot_url}"
+    else:
+        new_urls = screenshot_url
+
+    interview.proctoring_video_url = new_urls
+    if interview.application:
+        interview.application.proctoring_video_url = new_urls
+
+    await db.commit()
+
+    return {
+        "message": "Screenshot uploaded successfully",
+        "screenshot_url": screenshot_url
+    }
