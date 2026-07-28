@@ -49,7 +49,10 @@ services:
     container_name: hiremind_frontend
     ports:
       - "80:80"
+      - "443:443"
       - "5173:80"
+    volumes:
+      - ./certs:/etc/nginx/ssl:ro
     depends_on:
       - backend
 
