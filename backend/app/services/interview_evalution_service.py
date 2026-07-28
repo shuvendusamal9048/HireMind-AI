@@ -100,6 +100,9 @@ class InterviewEvaluationService:
         interview.recommendation = recommendation
         interview.is_completed = True
         interview.status = "COMPLETED"
+        if interview.application:
+            from app.constants.application_constants import ApplicationStatus
+            interview.application.status = ApplicationStatus.INTERVIEW_COMPLETED
 
         candidate_name = interview.application.candidate_name if getattr(interview, "application", None) else "Candidate"
         interview.report = f"Candidate {candidate_name} completed the AI Technical Examination. Evaluated Technical Score: {interview.technical_score}/100. Overall Score: {interview.overall_score}/100. Final Hiring Decision: {recommendation}."
