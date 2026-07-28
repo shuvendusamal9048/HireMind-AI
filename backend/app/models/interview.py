@@ -106,6 +106,11 @@ class Interview(
         nullable=True
     )
 
+    proctoring_video_url: Mapped[str] = mapped_column(
+        String,
+        nullable=True
+    )
+
     questions = relationship(
         "InterviewQuestion",
         back_populates="interview",

@@ -31,6 +31,8 @@ async def startup_db_migration():
             # 2. Automatically add missing columns to existing tables if needed (AWS / Neon migration)
             await conn.execute(text("ALTER TABLE companies ADD COLUMN IF NOT EXISTS gst_number VARCHAR;"))
             await conn.execute(text("ALTER TABLE companies ADD COLUMN IF NOT EXISTS approval_status VARCHAR DEFAULT 'APPROVED';"))
+            await conn.execute(text("ALTER TABLE interviews ADD COLUMN IF NOT EXISTS proctoring_video_url VARCHAR;"))
+            await conn.execute(text("ALTER TABLE candidate_applications ADD COLUMN IF NOT EXISTS proctoring_video_url VARCHAR;"))
             print("Database startup migration executed successfully.")
     except Exception as e:
         print(f"Startup DB migration notice: {e}")

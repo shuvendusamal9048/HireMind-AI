@@ -262,13 +262,23 @@ export const ApplicationDetails = () => {
               )}
             </div>
 
-            {candidate.resume_url && (
-              <a href={candidate.resume_url} download className="block shrink-0 pt-2">
-                <Button variant="outline" className="w-full text-xs font-bold justify-center" icon={Download}>
-                  Download Resume Copy
-                </Button>
-              </a>
-            )}
+            <div className="space-y-2 shrink-0 pt-2">
+              {candidate.resume_url && (
+                <a href={candidate.resume_url} download className="block">
+                  <Button variant="outline" className="w-full text-xs font-bold justify-center" icon={Download}>
+                    Download Resume Copy (PDF)
+                  </Button>
+                </a>
+              )}
+
+              {candidate.proctoring_video_url && (
+                <a href={candidate.proctoring_video_url} download className="block">
+                  <Button variant="primary" className="w-full text-xs font-bold justify-center bg-indigo-600 hover:bg-indigo-700 text-white border-0" icon={Video}>
+                    Download Proctoring Video (1 min WebM)
+                  </Button>
+                </a>
+              )}
+            </div>
           </Card>
         </div>
       </div>

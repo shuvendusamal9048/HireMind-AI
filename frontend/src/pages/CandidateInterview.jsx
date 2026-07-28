@@ -41,12 +41,15 @@ export const CandidateInterview = () => {
   // Proctoring States
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [isTerminated, setIsTerminated] = useState(false);
+  const [isCameraDenied, setIsCameraDenied] = useState(false);
   const [multiPersonAlert, setMultiPersonAlert] = useState(false);
   const lastTabSwitchRef = useRef(0);
 
-  // Webcam stream reference
+  // Webcam stream & 1-minute video recorder references
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const recordedChunksRef = useRef([]);
   const [cameraActive, setCameraActive] = useState(false);
 
   useEffect(() => {
@@ -84,23 +87,71 @@ export const CandidateInterview = () => {
 
     fetchInterviewData();
 
-    // Initialize Webcam
+    // Initialize Webcam & 1-Minute Proctoring Video Recorder
     const initWebcam = async () => {
       try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const constraints = { video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false };
+        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
         streamRef.current = mediaStream;
         if (videoRef.current) {
           videoRef.current.srcObject = mediaStream;
         }
         setCameraActive(true);
+
+        // Start 1-Minute (60s) Proctoring Video Recording
+        try {
+          recordedChunksRef.current = [];
+          const options = MediaRecorder.isTypeSupported('video/webm;codecs=vp8')
+            ? { mimeType: 'video/webm;codecs=vp8' }
+            : { mimeType: 'video/webm' };
+
+          const recorder = new MediaRecorder(mediaStream, options);
+          mediaRecorderRef.current = recorder;
+
+          recorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+              recordedChunksRef.current.push(event.data);
+            }
+          };
+
+          recorder.onstop = async () => {
+            if (recordedChunksRef.current.length > 0) {
+              const videoBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+              const formData = new FormData();
+              formData.append('file', videoBlob, `proctoring_${id}.webm`);
+              try {
+                await candidateInterviewService.uploadProctoringVideo(id, formData);
+              } catch (e) {
+                console.warn('Proctoring video upload notice:', e);
+              }
+            }
+          };
+
+          recorder.start(1000); // Collect chunk every 1 second
+
+          // Automatically stop recording after 60 seconds (1 minute)
+          setTimeout(() => {
+            if (recorder && recorder.state !== 'inactive') {
+              recorder.stop();
+            }
+          }, 60000);
+        } catch (recErr) {
+          console.warn('MediaRecorder error:', recErr);
+        }
       } catch (err) {
-        console.warn('Webcam initialization failed or permission denied:', err);
-        toast.error('Webcam and Microphone are required for proctored session.');
+        console.warn('Webcam permission denied or camera missing:', err);
+        setIsCameraDenied(true);
+        setIsTerminated(true);
+        toast.error('CAMERA PERMISSION DENIED: Examination terminated immediately!');
+        candidateInterviewService.finishInterview(id);
       }
     };
     initWebcam();
 
     return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+      }
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
@@ -112,7 +163,7 @@ export const CandidateInterview = () => {
     setVisitedA((prev) => new Set(prev).add(currentIdx));
   }, [currentIdx]);
 
-  // Tab Switch & Visibility Change Monitor
+  // Tab Switch & Visibility Change Monitor (Max 2 Warnings Allowed)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden && !isTerminated) {
@@ -122,15 +173,15 @@ export const CandidateInterview = () => {
 
         setTabSwitchCount((prev) => {
           const nextCount = prev + 1;
-          if (nextCount >= 4) {
+          if (nextCount >= 3) { // 3rd tab switch triggers immediate termination (Max 2 warnings allowed)
             setIsTerminated(true);
-            toast.error('Session terminated: Exceeded 3 tab switching warnings!');
+            toast.error('Session terminated: Exceeded maximum 2 tab switching warnings!');
             if (streamRef.current) {
               streamRef.current.getTracks().forEach((track) => track.stop());
             }
             candidateInterviewService.finishInterview(id);
           } else {
-            toast.error(`PROCTOR WARNING (${nextCount}/3): Tab switching detected!`, { duration: 5000 });
+            toast.error(`PROCTOR WARNING (${nextCount}/2): Tab switching detected! Exam will lock on 3rd violation.`, { duration: 5000 });
           }
           return nextCount;
         });
@@ -496,12 +547,16 @@ export const CandidateInterview = () => {
               <MonitorX className="w-10 h-10" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Assessment Locked</h2>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                {isCameraDenied ? 'Camera Access Required' : 'Assessment Locked'}
+              </h2>
               <p className="text-xs text-rose-600 dark:text-rose-400 font-bold uppercase tracking-wider">
-                Exceeded Tab Switching Violation Limit
+                {isCameraDenied ? 'Proctoring Permission Denied' : 'Exceeded Tab Switching Violation Limit'}
               </p>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed pt-2">
-                Your examination has been automatically locked due to repeated window switching violations (4/3 limit). Your assessment state has been recorded.
+                {isCameraDenied
+                  ? 'Your examination has been automatically terminated because webcam permission was denied. Proctored technical assessments strictly require active camera feed.'
+                  : 'Your examination has been automatically locked due to repeated window switching violations (3 violations limit). Your assessment state has been recorded.'}
               </p>
             </div>
             <Button

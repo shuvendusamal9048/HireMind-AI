@@ -567,3 +567,42 @@ async def add_event(
         "message":
             "Event saved"
     }
+
+
+from fastapi import File, UploadFile
+import os
+import uuid
+
+@router.post("/{interview_id}/video-proctoring")
+async def upload_proctoring_video(
+    interview_id: str,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db)
+):
+    interview = await InterviewRepository.get_by_id(db, interview_id)
+    if not interview:
+        raise HTTPException(status_code=404, detail="Interview not found")
+
+    ext = os.path.splitext(file.filename)[1] or ".webm"
+    filename = f"proctoring_{interview_id}_{uuid.uuid4().hex[:6]}{ext}"
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    upload_dir = os.path.join(base_dir, "uploads", "proctoring")
+    os.makedirs(upload_dir, exist_ok=True)
+    file_path = os.path.join(upload_dir, filename)
+
+    contents = await file.read()
+    with open(file_path, "wb") as f:
+        f.write(contents)
+
+    video_url = f"/uploads/proctoring/{filename}"
+    interview.proctoring_video_url = video_url
+    if interview.application:
+        interview.application.proctoring_video_url = video_url
+
+    await db.commit()
+
+    return {
+        "message": "Proctoring video uploaded successfully",
+        "video_url": video_url
+    }

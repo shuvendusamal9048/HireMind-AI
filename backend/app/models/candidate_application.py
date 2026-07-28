@@ -122,6 +122,11 @@ class CandidateApplication(
         String(255),
         nullable=True
     )
+
+    proctoring_video_url: Mapped[str] = mapped_column(
+        String(1000),
+        nullable=True
+    )
     interviews = relationship(
         "Interview",
         back_populates="application"
