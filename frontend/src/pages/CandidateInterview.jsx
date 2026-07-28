@@ -393,6 +393,31 @@ export const CandidateInterview = () => {
 
   const isAllExamComplete = isSectionAComplete && isSectionBAttempted;
 
+  const stopAndUploadVideo = () => {
+    return new Promise((resolve) => {
+      if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') {
+        resolve(null);
+        return;
+      }
+
+      mediaRecorderRef.current.onstop = async () => {
+        if (recordedChunksRef.current.length > 0) {
+          const videoBlob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+          const formData = new FormData();
+          formData.append('file', videoBlob, `proctoring_${id}.webm`);
+          try {
+            await candidateInterviewService.uploadProctoringVideo(id, formData);
+          } catch (e) {
+            console.warn('Proctoring video upload notice:', e);
+          }
+        }
+        resolve(null);
+      };
+
+      mediaRecorderRef.current.stop();
+    });
+  };
+
   const handleSubmitInterview = async (isAutoSubmit = false) => {
     if (!isAutoSubmit) {
       if (!isSectionAComplete) {
@@ -410,6 +435,9 @@ export const CandidateInterview = () => {
 
     setIsSubmitting(true);
     try {
+      // 1. Stop recording and wait for upload to complete
+      await stopAndUploadVideo();
+
       const answersArray = [
         ...sectionA.map((q) => ({
           question_id: q.id,
