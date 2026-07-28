@@ -36,6 +36,9 @@ async def startup_db_migration():
         print(f"Startup DB migration notice: {e}")
 
 
+import os
+from fastapi.staticfiles import StaticFiles
+
 # Configure CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
@@ -44,6 +47,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount uploads directory for static file access & PDF downloads
+uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 # Include all API v1 routers under /api/v1 prefix
 app.include_router(api_router, prefix="/api/v1")
