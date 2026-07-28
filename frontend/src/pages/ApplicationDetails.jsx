@@ -250,7 +250,7 @@ export const ApplicationDetails = () => {
             <div className="flex-1 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 overflow-hidden relative min-h-0">
               {candidate.resume_url ? (
                 <iframe
-                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(candidate.resume_url)}&embedded=true`}
+                  src={candidate.resume_url}
                   title="Resume Viewer"
                   className="w-full h-full border-none"
                 />

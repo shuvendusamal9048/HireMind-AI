@@ -37,7 +37,7 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
     volumes:
-      - backend_uploads:/app/backend/uploads
+      - backend_uploads:/app/backend/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
