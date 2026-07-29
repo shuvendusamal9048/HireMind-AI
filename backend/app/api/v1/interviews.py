@@ -140,9 +140,9 @@ async def get_interview(
                 "options": options
             })
 
-    # Sort sectionA by Q1..Q10 sequence
+    # Sort sectionA by Q1..Q15 sequence
     def extract_q_num(item):
-        match = re.search(r'Q(\d+)\/10', item["question"])
+        match = re.search(r'Q(\d+)', item["question"])
         return int(match.group(1)) if match else 99
 
     sectionA.sort(key=extract_q_num)

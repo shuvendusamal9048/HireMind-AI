@@ -418,7 +418,7 @@ export const CandidateInterview = () => {
   const answeredACount = Object.keys(answersA).filter(
     (k) => answersA[k] && String(answersA[k]).trim().length > 0
   ).length;
-  const isSectionAComplete = answeredACount >= (sectionA.length || 10);
+  const isSectionAComplete = answeredACount >= (sectionA.length || 15);
 
   const isSectionBAttempted = (() => {
     if (testResults !== null && Array.isArray(testResults) && testResults.length > 0) {
@@ -580,9 +580,9 @@ export const CandidateInterview = () => {
                   : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              <span>Section 1: Technical MCQs (10)</span>
+              <span>Section 1: Technical MCQs (15)</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] ${isSectionAComplete ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-900 text-amber-600 dark:text-amber-300'}`}>
-                {answeredACount}/10
+                {answeredACount}/15
               </span>
             </button>
 
@@ -782,7 +782,7 @@ export const CandidateInterview = () => {
                     <Code className="w-4 h-4 text-emerald-500" />
                     <span>Section 2: Python Coding Challenge</span>
                   </span>
-                  <span className="text-xs text-slate-500 font-mono">Max Score: 100</span>
+                  <span className="text-xs text-slate-500 font-mono">Max Score: 10</span>
                 </div>
 
                 {/* Problem Description */}

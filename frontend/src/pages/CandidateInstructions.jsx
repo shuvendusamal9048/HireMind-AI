@@ -86,10 +86,10 @@ export const CandidateInstructions = () => {
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 space-y-2 shadow-sm">
               <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-black text-xs">
                 <FileText className="w-4 h-4" />
-                <span>Section A — 10 Technical MCQs</span>
+                <span>Section A — 15 Technical MCQs</span>
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
-                Complete <strong className="text-slate-900 dark:text-white font-black">10 Multiple-Choice Questions</strong>. Select choice A, B, C, or D for each question and navigate smoothly.
+                Complete <strong className="text-slate-900 dark:text-white font-black">15 Multiple-Choice Questions</strong> (5 Advanced Python, 5 Medium ML, and 5 Easy Gen AI). Select choice A, B, C, or D for each question.
               </p>
             </div>
 
